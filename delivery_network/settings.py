@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_spectacular",
     "meal_checks",
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -78,7 +79,7 @@ WSGI_APPLICATION = "delivery_network.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
+#
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -88,7 +89,6 @@ DATABASES = {
         "HOST": os.environ.get("POSTGRES_HOST"),
     }
 }
-
 
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -144,4 +144,12 @@ REST_FRAMEWORK = {
 
 CELERY_BROKER_URL = "redis://localhost:6379"
 CELERY_RESULT_BACKEND = "redis://localhost:6379"
-CELERY_TASK_TRACK_STARTED = True
+CELERY_TIMEZONE = "UTC"
+
+
+CELERY_BEAT_SCHEDULE = {
+    'run_every_minute': {
+        'task': 'meal_checks.tasks.get_generated_checks',
+        'schedule': 10.0,
+    },
+}
