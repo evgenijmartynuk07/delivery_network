@@ -1,0 +1,72 @@
+import json
+
+from django.core.serializers.json import DjangoJSONEncoder
+from django.db import transaction
+from rest_framework.response import Response
+from rest_framework.status import (
+    HTTP_409_CONFLICT,
+    HTTP_404_NOT_FOUND,
+    HTTP_500_INTERNAL_SERVER_ERROR,
+    HTTP_400_BAD_REQUEST,
+    HTTP_201_CREATED,
+)
+from rest_framework.views import APIView
+
+from meal_checks.models import Printer, Check
+from meal_checks.serializers import OrderSerializer
+from .tasks import generate_pdf
+
+
+class OrderCreateView(APIView):
+    serializer_class = OrderSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            order_id = serializer.validated_data["order_id"]
+            order_details = serializer.validated_data["order_details"]
+            point_id = serializer.validated_data["point_id"]
+
+            printers = Printer.objects.filter(point_id=point_id)
+
+            if not printers.exists():
+                return Response(
+                    {"error": "Point not found"},
+                    status=HTTP_404_NOT_FOUND
+                )
+
+            order = {"order_id": order_id, "order_details": order_details}
+            order_json = json.dumps(order, cls=DjangoJSONEncoder)
+
+            if Check.objects.filter(order=order_json).exists():
+                return Response(
+                    {"error": f"Check already exists for order {order_id}"},
+                    status=HTTP_409_CONFLICT,
+                )
+
+            for printer in printers:
+                try:
+                    with transaction.atomic():
+                        check = Check.objects.create(
+                            printer_id=printer,
+                            type=printer.check_type,
+                            order=order_json,
+                        )
+                except Exception as error:
+                    return Response(
+                        {"error": f"{error}: Transaction failed"},
+                        status=HTTP_500_INTERNAL_SERVER_ERROR,
+                    )
+
+                generate_pdf.delay(
+                    order_id,
+                    printer.id,
+                    check.type,
+                    order_json
+                )
+
+            return Response(
+                {"message": "Order created"}, status=HTTP_201_CREATED
+            )
+
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)

@@ -1,0 +1,26 @@
+version: '3'
+services:
+  redis:
+    image: "redis:7-alpine"
+    command: redis-server
+    ports:
+      - "6378:6379"
+    volumes:
+      - ./tmp/redis_data:/var/lib/redis/data
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - "5435:5432"
+    volumes:
+      - ./tmp/postgres_data:/var/lib/postgresql/data
+
+  wkhtmltopdf-aas:
+    image: openlabs/docker-wkhtmltopdf-aas
+    container_name: wkhtmltopdf-aas-container
+    ports:
+      - "8080:80"
+    restart: on-failure
