@@ -9,8 +9,30 @@ from django.conf import settings
 from meal_checks.models import Check
 
 
+def create_check_file(file_name: str, html_content: str) -> None:
+
+    output_path = os.path.join(settings.MEDIA_ROOT, "pdf", file_name)
+    html_file_path = os.path.join(settings.MEDIA_ROOT, "pdf", "input.html")
+
+    with open(html_file_path, "w+") as html_file:
+        html_file.write(html_content)
+
+    docker_host = "localhost"
+    port = "8080"
+
+    url = f"http://{docker_host}:{port}/"
+    cmd = f'curl -X POST -F "file=@{html_file_path}" {url} -o {output_path}'
+    subprocess.run(cmd, shell=True)
+
+
 @shared_task
-def generate_pdf(order_id, printer_id, check_type, order_json) -> str:
+def generate_pdf(
+        order_id: int,
+        printer_id: int,
+        check_type: str,
+        order_json: json
+) -> str:
+
     file_name = f"{order_id}_{check_type}.pdf"
     check = Check.objects.get(printer_id=printer_id, order=order_json)
 
@@ -25,18 +47,7 @@ def generate_pdf(order_id, printer_id, check_type, order_json) -> str:
         },
     )
 
-    output_path = os.path.join(settings.MEDIA_ROOT, "pdf", file_name)
-    html_file_path = os.path.join(settings.MEDIA_ROOT, "pdf", "input.html")
-
-    with open(html_file_path, "w") as html_file:
-        html_file.write(html_content)
-
-    docker_host = "localhost"
-    port = "8080"
-
-    url = f"http://{docker_host}:{port}/"
-    cmd = f'curl -X POST -F "file=@{html_file_path}" {url} -o {output_path}'
-    subprocess.run(cmd, shell=True)
+    create_check_file(file_name=file_name, html_content=html_content)
 
     check.status = "RENDERED"
     check.pdf_file.name = f"pdf/{file_name}"

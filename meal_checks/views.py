@@ -1,4 +1,5 @@
 import json
+from typing import Optional
 
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import transaction
@@ -20,7 +21,7 @@ from .tasks import generate_pdf
 class OrderCreateView(APIView):
     serializer_class = OrderSerializer
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs) -> Response:
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             order_id = serializer.validated_data["order_id"]
@@ -45,24 +46,10 @@ class OrderCreateView(APIView):
                 )
 
             for printer in printers:
-                try:
-                    with transaction.atomic():
-                        check = Check.objects.create(
-                            printer_id=printer,
-                            type=printer.check_type,
-                            order=order_json,
-                        )
-                except Exception as error:
-                    return Response(
-                        {"error": f"{error}: Transaction failed"},
-                        status=HTTP_500_INTERNAL_SERVER_ERROR,
-                    )
-
-                generate_pdf.delay(
-                    order_id,
-                    printer.id,
-                    check.type,
-                    order_json
+                self.create_sample_check(
+                    printer=printer,
+                    order_json=order_json,
+                    order_id=order_id
                 )
 
             return Response(
@@ -70,3 +57,30 @@ class OrderCreateView(APIView):
             )
 
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+    @staticmethod
+    def create_sample_check(
+            printer: Printer,
+            order_json: json,
+            order_id: int
+    ) -> Optional[Response]:
+
+        try:
+            with transaction.atomic():
+                check = Check.objects.create(
+                    printer_id=printer,
+                    type=printer.check_type,
+                    order=order_json,
+                )
+        except Exception as error:
+            return Response(
+                {"error": f"{error}: Transaction failed"},
+                status=HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        generate_pdf.delay(
+            order_id,
+            printer.id,
+            check.type,
+            order_json
+        )
