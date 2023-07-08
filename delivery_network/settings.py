@@ -86,7 +86,8 @@ DATABASES = {
         "NAME": os.environ.get("POSTGRES_DB"),
         "USER": os.environ.get("POSTGRES_USER"),
         "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
-        "HOST": os.environ.get("POSTGRES_HOST"),
+        'HOST': os.environ.get("POSTGRES_HOST"),
+        "PORT": "5435",
     }
 }
 
@@ -142,8 +143,8 @@ REST_FRAMEWORK = {
 }
 
 
-CELERY_BROKER_URL = "redis://localhost:6379"
-CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_BROKER_URL = "redis://redis-container:6379"
+CELERY_RESULT_BACKEND = "redis://redis-container:6379"
 CELERY_TIMEZONE = "UTC"
 
 
@@ -153,3 +154,4 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': 10.0,
     },
 }
+
