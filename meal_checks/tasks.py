@@ -11,8 +11,11 @@ from meal_checks.models import Check
 
 def create_check_file(file_name: str, html_content: str) -> None:
 
-    output_path = os.path.join(settings.MEDIA_ROOT, "pdf", file_name)
-    html_file_path = os.path.join(settings.MEDIA_ROOT, "pdf", "input.html")
+    media_pdf_path = os.path.join(settings.MEDIA_ROOT, 'pdf')
+    os.makedirs(media_pdf_path, exist_ok=True)
+
+    output_path = os.path.join(media_pdf_path, file_name)
+    html_file_path = os.path.join(media_pdf_path, "input.html")
 
     with open(html_file_path, "w+") as html_file:
         html_file.write(html_content)
