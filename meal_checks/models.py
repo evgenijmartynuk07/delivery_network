@@ -42,7 +42,11 @@ class Check(models.Model):
         choices=STATUS_CHOICES,
         default="NEW"
     )
-    pdf_file = models.FileField(null=True, blank=True)
+    pdf_file = models.FileField(
+        upload_to="pdf/",
+        null=True,
+        blank=True
+    )
 
     def __str__(self) -> str:
         return f"Check - {self.pk}"
