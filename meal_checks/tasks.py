@@ -52,9 +52,10 @@ def generate_pdf(
 
     create_check_file(file_name=file_name, html_content=html_content)
 
-    check.status = "RENDERED"
-    check.pdf_file.name = f"pdf/{file_name}"
-    check.save()
+    with transaction.atomic():
+        check.status = "RENDERED"
+        check.pdf_file.name = f"pdf/{file_name}"
+        check.save()
 
     return f"Check {file_name} created"
 
