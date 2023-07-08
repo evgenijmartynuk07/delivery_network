@@ -10,10 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
+import subprocess
 
 from pathlib import Path
 from dotenv import load_dotenv
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv()
@@ -22,7 +22,7 @@ load_dotenv()
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-wjl^l5a=tum7p6-q@_9((ti+7f5v=mq7rb!+t(mbb7(p^pjz%n"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -87,7 +87,7 @@ DATABASES = {
         "USER": os.environ.get("POSTGRES_USER"),
         "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
         'HOST': os.environ.get("POSTGRES_HOST"),
-        "PORT": "5435",
+        "PORT": "5435", #need for Docker images
     }
 }
 
@@ -143,8 +143,8 @@ REST_FRAMEWORK = {
 }
 
 
-CELERY_BROKER_URL = "redis://redis-container:6379"
-CELERY_RESULT_BACKEND = "redis://redis-container:6379"
+CELERY_BROKER_URL = "redis://localhost:6378"
+CELERY_RESULT_BACKEND = "redis://localhost:6378"
 CELERY_TIMEZONE = "UTC"
 
 

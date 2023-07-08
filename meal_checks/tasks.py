@@ -1,6 +1,8 @@
+import json
 import os
-from celery import shared_task
 import subprocess
+
+from celery import shared_task
 from django.db import transaction
 from django.template.loader import render_to_string
 from django.conf import settings
@@ -10,23 +12,27 @@ from meal_checks.models import Check
 @shared_task
 def generate_pdf(order_id, printer_id, check_type, order_json) -> str:
     file_name = f"{order_id}_{check_type}.pdf"
-
     check = Check.objects.get(printer_id=printer_id, order=order_json)
 
+    check_order = json.loads(order_json)["order_details"]
+
     html_content = render_to_string(
-        "check_template.html", {
+        "check_template.html",
+        {
             "order_id": order_id,
             "check_type": check_type,
-            "check_order": order_json,
-        }
+            "check_order": check_order,
+        },
     )
-    output_path = os.path.join(settings.MEDIA_ROOT, 'pdf', file_name)
-    html_file_path = os.path.join(settings.MEDIA_ROOT, 'pdf', 'input.html')
-    with open(html_file_path, 'w') as html_file:
+
+    output_path = os.path.join(settings.MEDIA_ROOT, "pdf", file_name)
+    html_file_path = os.path.join(settings.MEDIA_ROOT, "pdf", "input.html")
+
+    with open(html_file_path, "w") as html_file:
         html_file.write(html_content)
 
-    docker_host = 'localhost'
-    port = '8080'
+    docker_host = "localhost"
+    port = "8080"
 
     url = f"http://{docker_host}:{port}/"
     cmd = f'curl -X POST -F "file=@{html_file_path}" {url} -o {output_path}'
