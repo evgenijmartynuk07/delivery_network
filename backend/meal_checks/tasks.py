@@ -1,3 +1,4 @@
+import datetime
 import json
 import os
 import subprocess
@@ -6,7 +7,7 @@ from celery import shared_task
 from django.db import transaction
 from django.template.loader import render_to_string
 from django.conf import settings
-from backend.meal_checks.models import Check
+from .models import Check
 
 
 def create_check_file(file_name: str, html_content: str) -> None:
@@ -47,6 +48,7 @@ def generate_pdf(
             "order_id": order_id,
             "check_type": check_type,
             "check_order": check_order,
+            "check_time": datetime.datetime.now()
         },
     )
 

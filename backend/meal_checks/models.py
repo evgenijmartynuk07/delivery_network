@@ -12,7 +12,7 @@ CHECK_CHOICES = (
 
 
 class Printer(models.Model):
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255)
     api_key = models.CharField(max_length=130, unique=True, blank=True)
     check_type = models.CharField(max_length=10, choices=CHECK_CHOICES)
     point_id = models.IntegerField()

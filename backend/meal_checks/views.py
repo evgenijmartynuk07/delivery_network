@@ -3,6 +3,7 @@ from typing import Optional
 
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import transaction
+from drf_spectacular.utils import extend_schema
 from rest_framework.response import Response
 from rest_framework.status import (
     HTTP_409_CONFLICT,
@@ -21,6 +22,14 @@ from .tasks import generate_pdf
 class OrderCreateView(APIView):
     serializer_class = OrderSerializer
 
+    @extend_schema(
+        description="""
+        Create order.
+        1. order_id: It`s unique value for investigate customer.
+        2. order_details: Describes what the customer ordered, as well as the price of the order.
+        3. point_id: Order location  
+        """,
+    )
     def post(self, request, *args, **kwargs) -> Response:
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():

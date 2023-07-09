@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "backend.meal_checks",
     'django_celery_beat',
+    "backend",
 ]
 
 MIDDLEWARE = [
@@ -59,8 +60,7 @@ ROOT_URLCONF = "backend.delivery_network.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / 'templates']
-        ,
+        "DIRS": [os.path.join(BASE_DIR, 'backend', 'templates')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -155,3 +155,16 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Foodie Supreme",
+    "DESCRIPTION": "Web application that works with checks and print them",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+        "defaultModelRendering": "model",
+        "defaultModelsExpandDepth": 2,
+        "defaultModelExpandDepth": 2,
+    },
+}
