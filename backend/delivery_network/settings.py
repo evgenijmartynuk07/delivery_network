@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "drf_spectacular",
-    "meal_checks",
+    "backend.meal_checks",
     'django_celery_beat',
 ]
 
@@ -54,7 +54,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "delivery_network.urls"
+ROOT_URLCONF = "backend.delivery_network.urls"
 
 TEMPLATES = [
     {
@@ -73,7 +73,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "delivery_network.wsgi.application"
+WSGI_APPLICATION = "backend.delivery_network.wsgi.application"
 
 
 # Database
@@ -150,7 +150,7 @@ CELERY_TIMEZONE = "UTC"
 
 CELERY_BEAT_SCHEDULE = {
     'run_every_minute': {
-        'task': 'meal_checks.tasks.get_generated_checks',
+        'task': 'backend.meal_checks.tasks.get_generated_checks',
         'schedule': 10.0,
     },
 }
