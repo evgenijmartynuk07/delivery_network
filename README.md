@@ -44,6 +44,7 @@ docker-compose up -d
 
 ### Create table in Database
 ```shell
+cd backend
 python manage.py makemigrations
 python manage.py migrate
 ```
@@ -56,7 +57,7 @@ python manage.py loaddata printers.json
 
 ### Run Celery and Project togather
 ```shell
-celery -A backend.delivery_network worker --beat --loglevel=info & python manage.py runserver
+celery -A delivery_network worker --beat --loglevel=info & python manage.py runserver
 ```
 
 If You have any questions: https://t.me/eugen_martynuk

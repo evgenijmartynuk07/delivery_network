@@ -14,8 +14,8 @@ from rest_framework.status import (
 )
 from rest_framework.views import APIView
 
-from backend.meal_checks.models import Printer, Check
-from backend.meal_checks.serializers import OrderSerializer
+from .models import Printer, Check
+from .serializers import OrderSerializer
 from .tasks import generate_pdf
 
 
