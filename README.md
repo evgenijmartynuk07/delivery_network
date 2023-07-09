@@ -1,6 +1,8 @@
 # delivery_network
 
 
+
+
 ## Installation
 
 Python3 must be already installed
@@ -21,7 +23,9 @@ pip install -r requirements.txt
 
 1. create .env based on .env.sample
 2. docker-compose up -d
-3. python manage.py migrate
-4. python manage.py createsuperuser (for use admin panel)
-5. celery -A delivery_network worker --beat --loglevel=info & python manage.py runserver
+3. python manage.py makemigrations
+4. python manage.py migrate
+5. python manage.py createsuperuser (for use admin panel)
+6. python manage.py loaddata printers.json
+7. celery -A delivery_network worker --beat --loglevel=info & python manage.py runserver
 ```

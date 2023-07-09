@@ -1,0 +1,50 @@
+[
+{
+    "model": "meal_checks.printer",
+    "fields": {
+        "name": "Printer 2002",
+        "check_type": "CLIENT",
+        "point_id": 2
+    }
+},
+{
+    "model": "meal_checks.printer",
+    "fields": {
+        "name": "Canon 1221",
+        "check_type": "KITCHEN",
+        "point_id": 1
+    }
+},
+{
+    "model": "meal_checks.printer",
+    "fields": {
+        "name": "Canon Printer",
+        "check_type": "KITCHEN",
+        "point_id": 2
+    }
+},
+    {
+    "model": "meal_checks.printer",
+    "fields": {
+        "name": "Printer 2023",
+        "check_type": "KITCHEN",
+        "point_id": 2
+    }
+},
+    {
+    "model": "meal_checks.printer",
+    "fields": {
+        "name": "Printer 2023",
+        "check_type": "KITCHEN",
+        "point_id": 3
+    }
+},
+    {
+    "model": "meal_checks.printer",
+    "fields": {
+        "name": "Printer",
+        "check_type": "CLIENT",
+        "point_id": 3
+    }
+}
+]
