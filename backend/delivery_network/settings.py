@@ -81,10 +81,10 @@ WSGI_APPLICATION = "backend.delivery_network.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("POSTGRES_DB"),
-        "USER": os.environ.get("POSTGRES_USER"),
-        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
-        'HOST': os.environ.get("POSTGRES_HOST"),
+        "NAME": os.environ.get("POSTGRES_DB", "ADMIN"),
+        "USER": os.environ.get("POSTGRES_USER", "ADMIN"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "ADMIN"),
+        'HOST': os.environ.get("POSTGRES_HOST", "localhost"),
         "PORT": "5435", #need for Docker images
     }
 }
