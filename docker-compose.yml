@@ -1,7 +1,8 @@
 version: '3'
 services:
   redis:
-    image: "redis:7-alpine"
+    image: "redis:latest"
+    restart: always
     command: redis-server
     ports:
       - "6378:6379"
@@ -9,10 +10,10 @@ services:
       - ./tmp/redis_data:/var/lib/redis/data
 
   db:
-    image: postgres
+    image: "postgres:latest"
     restart: always
-    environment:
-      - POSTGRES_HOST_AUTH_METHOD=trust
+    env_file:
+      - .env
     ports:
       - "5435:5432"
     volumes:
