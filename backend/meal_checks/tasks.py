@@ -6,7 +6,7 @@ from celery import shared_task
 from django.db import transaction
 from django.template.loader import render_to_string
 from django.conf import settings
-from meal_checks.models import Check
+from backend.meal_checks.models import Check
 
 
 def create_check_file(file_name: str, html_content: str) -> None:
