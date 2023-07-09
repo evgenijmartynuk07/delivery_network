@@ -11,27 +11,52 @@ The "Food Top" delivery network has numerous points where orders are prepared fo
 
 Python3 must be already installed
 
-
-
 The project runs local. 
 Redis, PostgresSQL and wkhtmltopdf directly in Docker, all configurations will be automatically generated.
 
 ```shell
 git clone https://github.com/evgenijmartynuk07/delivery_network.git
 cd delivery_network
+```
 
+### Create virtualenv
+```shell
 python -m venv venv
 
 Windows: venv\Scripts\activate
 Linux, Unix: source venv/bin/activate
-
-pip install -r requirements.txt
-
-1. create .env based on .env.sample
-2. docker-compose up -d
-3. python manage.py makemigrations
-4. python manage.py migrate
-5. python manage.py createsuperuser (for use admin panel)
-6. python manage.py loaddata printers.json
-7. celery -A backend.delivery_network worker --beat --loglevel=info & python manage.py runserver
 ```
+
+### Install requirements
+```shell
+pip install -r requirements.txt
+```
+
+### Create environment file
+```shell
+create .env based on .env.sample
+```
+
+### Run Docker-Compose for create Database
+```shell
+docker-compose up -d
+```
+
+### Create table in Database
+```shell
+python manage.py makemigrations
+python manage.py migrate
+```
+
+### Create User and load data to Database
+```shell
+python manage.py createsuperuser (for use admin panel)
+python manage.py loaddata printers.json
+```
+
+### Run Celery and Project togather
+```shell
+celery -A backend.delivery_network worker --beat --loglevel=info & python manage.py runserver
+```
+
+If You have any questions: https://t.me/eugen_martynuk
