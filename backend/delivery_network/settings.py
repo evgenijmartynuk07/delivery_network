@@ -148,9 +148,10 @@ CELERY_TIMEZONE = "UTC"
 
 
 CELERY_BEAT_SCHEDULE = {
-    'run_every_minute': {
+    'get_generated_checks': {
         'task': 'meal_checks.tasks.get_generated_checks',
         'schedule': 10.0,
+        'args': (),
     },
 }
 
