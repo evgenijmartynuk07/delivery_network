@@ -23,7 +23,6 @@ cd delivery_network
 ```shell
 python -m venv venv
 
-Windows: venv\Scripts\activate
 Linux, Unix: source venv/bin/activate
 ```
 
