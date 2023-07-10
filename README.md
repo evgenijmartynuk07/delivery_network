@@ -45,7 +45,6 @@ docker-compose up -d
 ### Create table in Database
 ```shell
 cd backend
-python manage.py makemigrations
 python manage.py migrate
 ```
 
